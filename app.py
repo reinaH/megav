@@ -21,11 +21,6 @@ from aiohttp import ClientSession
 # in a prod env this might be more similar to key and would be stored in an env doc and not so visibly
 candidateId = '4bc4ea3e-ec07-4b92-8112-5aed3e422f92'
 
-base = 'https://challenge.crossmint.io'
-headers = {
-  'Content-Type': 'application/json'
-}
-
 # class definitions
 
 class GoalMap():
@@ -88,8 +83,17 @@ class AstralObjectsMapper():
 
 
 # ################
+class AstralObject():
+    def __init__(self):
+        self.base = 'https://challenge.crossmint.io'
+        self.headers = {
+        'Content-Type': 'application/json'
+        }
 
-class  Polyanet():
+
+
+
+class  Polyanet(AstralObject):
     # available HTTP methods:
     # POST - arguments: row and col
     # DELETE - arguments: row and col
@@ -99,10 +103,11 @@ class  Polyanet():
 
     # instance attrs
     def __init__(self, index):
+        super().__init__()
         self.name='POLYANET'
         self.index=index
         self.payload = self.get_payload(index[0], index[1])
-        self.url= (base + Polyanet.endpoint) #overkill as each instance has the same val but kept bc in theory is more scalable
+        self.url= (self.base + Polyanet.endpoint) #overkill as each instance has the same val but kept bc in theory is more scalable
 
     # #####
     def get_payload(self, row, column):
@@ -114,7 +119,7 @@ class  Polyanet():
 
         return payload
 
-class  Soloon():
+class  Soloon(AstralObject):
     # available HTTP methods:
     # POST - arguments: row, col, color
     # DELETE - arguments: row, col
@@ -124,11 +129,12 @@ class  Soloon():
 
     # instance attrs
     def __init__(self, index, color):
+        super().__init__()
         self.name='SOLOON'
         self.index=index
         self.payload=self.get_payload(index[0], index[1], color)
         self.color=color
-        self.url= (base + Soloon.endpoint) #overkill as each instance has the same val but kept bc in theory is more scalable
+        self.url= (self.base + Soloon.endpoint) #overkill as each instance has the same val but kept bc in theory is more scalable
 
     # #####
     def get_payload(self, row, column, color):
@@ -140,7 +146,7 @@ class  Soloon():
         })
         return payload
     
-class Cometh():
+class Cometh(AstralObject):
     # available HTTP methods:
     # POST - arguments: row, col, direction
     # DELETE - arguments: row, col
@@ -150,11 +156,12 @@ class Cometh():
 
     # instance attrs
     def __init__(self, index, direction):
+        super().__init__()
         self.name='COMETH'
         self.index=index
         self.payload = self.get_payload(index[0], index[1], direction)
         self.direction=direction
-        self.url= (base + Cometh.endpoint) #overkill as each instance has the same val but kept bc in theory is more scalable
+        self.url= (self.base + Cometh.endpoint) #overkill as each instance has the same val but kept bc in theory is more scalable
 
     # #####
     def get_payload(self, row, column, direction):
@@ -173,7 +180,7 @@ class AstralObjectsAsyncClient():
         self.loop = asyncio.get_event_loop()
         self.future = asyncio.ensure_future(self.run())
 
-    async def fetch(self,url, session, payload):
+    async def fetch(self,url, session, payload, headers):
         async with session.post(url, data=payload, headers=headers) as response:
             # print('fetching', url, payload) #used to see what was going on. can delete. 
             return await response.read()
@@ -194,8 +201,9 @@ class AstralObjectsAsyncClient():
             for i in self.astrallist:
                 url = i.url
                 payload = i.payload
+                headers = i.headers
 
-                task = asyncio.ensure_future(self.fetch(url, session, payload))
+                task = asyncio.ensure_future(self.fetch(url, session, payload, headers))
                 tasks.append(task)
 
             responses = await asyncio.gather(*tasks)
@@ -205,7 +213,6 @@ class AstralObjectsAsyncClient():
 
 #  main 
 if __name__ == "__main__":
-
 
     # get current goalmap. currently app is designed that if all phases are done it returns 500. 
     #  so if 500 we return empty map so the universe doesnt explode. 
