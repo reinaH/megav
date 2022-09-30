@@ -90,9 +90,6 @@ class AstralObject():
         'Content-Type': 'application/json'
         }
 
-
-
-
 class  Polyanet(AstralObject):
     # available HTTP methods:
     # POST - arguments: row and col
@@ -208,7 +205,7 @@ class AstralObjectsAsyncClient():
 
             responses = await asyncio.gather(*tasks)
             # you now have all response bodies in this variable
-            # print(responses, tasks) #used to see what was going on. can delete. 
+            print(responses, tasks) #used to see what was going on. can delete. 
 
 
 #  main 
