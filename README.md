@@ -26,7 +26,10 @@ http bodies are case sensitive and if i tried to create an object w upper v lowe
 
 ## if i could add improvements to app:
 
-i think what could make this assignment better is to add a 'currentmegaverse' endpoint. it would be nice to be able to just validate the current megaverse against the solution endpoint without having to physically look at it. that and risk the map 'disappearing'- if you do have the right solution as soon as you 'validate' you risk losing the current view. 
+backend: i think what could make this assignment better is to add a 'currentmegaverse' endpoint. it would be nice to be able to just validate the current megaverse against the solution endpoint without having to physically look at it. that and risk the map 'disappearing'- if you do have the right solution as soon as you 'validate' you risk losing the current view. 
+
+
+testing: i would do a lot more with regards to testing. i added very simple test cases bc no program is complete without a test suite but theres so more that can be done.   
 
 
 
